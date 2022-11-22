@@ -5,13 +5,13 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1080,
+    width: 1180,
     height: 750,
     show: true,
     autoHideMenuBar: true,
     ...(process.platform === 'linux'
       ? {
-          icon: path.join(__dirname, '../../build/icon.png')
+          icon: path.join(__dirname, '../../build/maple.png')
         }
       : {}),
     webPreferences: {
@@ -19,7 +19,7 @@ function createWindow(): void {
       contextIsolation:false,
       preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false,
-      
+      webSecurity:false
     }
   })
 
@@ -67,6 +67,7 @@ app.whenReady().then(() => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()

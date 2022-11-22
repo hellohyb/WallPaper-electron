@@ -1,14 +1,18 @@
 <template>
     <div class="home">
-        <!-- <h1>首页</h1>
-        <input id="iptss" type="file" ref="upload"
-        accept="image/png, image/jpeg"
-        @change="setWalls()"
-        > -->
-        <div>
+        <!-- 侧边栏 -->
+        <div class="leftBar">
+            <ul id="init2">
+                <li v-for="item in paperName.data" @click="setStyle_getPaper(item.old_id,$event)">
+                {{item.category}}
+                </li>
+            </ul>
+        </div>
+        <!-- 壁纸展示 -->
+        <div class="showPapers">
             <ul>
                 <li v-for="item in paperCat.data" @click="showWhat(item)">
-                    <img :src="item.url" alt="" width="250" height="150">
+                    <img v-lazy :src="item.url" alt="" width="250" height="150">
                 </li>
             </ul>
         </div>
@@ -33,13 +37,14 @@
                 outline: none;
                 border: none;
                 cursor: pointer;
-                background: greenyellow;
+                background: #00c588;
                 font-size: large;
-                margin-top: 20px;
+                margin-top:20px;
+                color:white;
                 "
                 @click="getAdd(imgInfo.data.url)"
                 >
-                    设为壁纸
+                    设 为 壁 纸
                 </button>
         </div>
     </div>
@@ -58,18 +63,55 @@ function setWalls(values){
   })
   myDlls.setWallpaper(gbk.convert(values,'GBK'));
 }
-// 存放api获取的分类数据
+// 存放api获取的分类壁纸
 let paperCat:any = reactive({
-    data:{}
+    data:''
 });
-//初始化首页
-async function getPaper(){
+//存放分类名称
+let paperName:any = reactive({
+    data:''
+})
+// 初始化数据,获取分类
+async function getCategory(){
     try{
-        const res = await axios.get("http://wp.birdpaper.com.cn/intf/GetListByCategory?cids=36&pageno=1&count=30")
+        await axios.get("http://wp.birdpaper.com.cn/intf/getCategory")
+        .then((res)=>{
+            // console.log(res);
+            paperName.data = res.data.data;
+            
+        }).then(()=>{
+            let inits:any = document.getElementById('init2');
+            inits.children[0].classList.add('active')
+        })
+        
+        // console.log(paperName.data)
+    }catch(err){
+        console.log(err);
+    }
+}
+//根据id获取壁纸
+async function getPaper(id){
+    paperCat.data = '';
+    try{
+        const res = await axios.get(`http://wp.birdpaper.com.cn/intf/GetListByCategory?cids=${id}&pageno=1&count=500`)
         paperCat.data = res.data.data.list;
     }catch(err){
         console.log(err);
     }
+}
+
+
+//侧边栏样式
+function setStyle(event){
+    let all = event.currentTarget.parentElement.children
+    for(let i = 0; i < all.length;i++){
+    all[i].classList.remove('active')
+  }
+  event.currentTarget.classList.add('active');
+}
+function setStyle_getPaper(id,event){
+    getPaper(id);
+    setStyle(event);
 }
 //点击展示图片
 let imgInfo:any = reactive({
@@ -102,13 +144,22 @@ function showWhat(info){
 let show:any = reactive({
     show:false
 })
-
 onMounted(()=>{
-    getPaper();
+    if(paperCat.data == ''){
+        getPaper(36); //默认选择4k壁纸（id为36）
+        getCategory(); 
+    }
 })
 </script>
 
 <style lang="less" scoped>
+.active{
+  color: #00c588;
+  background: white;
+  // box-shadow: 0px 0px 15px 1px yellowgreen inset;
+  border-bottom: 1px solid none;
+}
+// 点击图片展示样式
 .show{
     margin-top: 60px;
     width: 100%;
@@ -124,7 +175,7 @@ onMounted(()=>{
         width: 70%;
         height: 80%;
         margin: 5px;
-        background: greenyellow;
+        background: rgba(226, 235, 200,.7);
         float: left;
         border-radius: 20px;
     }
@@ -136,18 +187,46 @@ onMounted(()=>{
         border-radius: 20px;
     }
 }
-.home{
-    width: 100%;
+// 侧边栏样式
+.leftBar{
+    position: fixed;
+    top: 77px;
+    left: 0;
+    float: left;
+    width: 12%;
+    height: calc(100vh - 70px);
+    background: #f6f7f8;
+    overflow: scroll;
+    ul{
+        list-style: none;
+        
+        li{
+            width: 100%;
+            padding: 10px 10px;
+            font-size: smaller;
+            text-align: center;
+            cursor: pointer;
+            &:hover{
+                background: white;
+            }
+        }
+    }
+}
+.showPapers{
+    width: 88%;
+    height: calc(100vh - 70px);
     margin-top: 70px;
+    margin-left: 12%;
     display: flex;
     justify-content: center;
     align-content: space-around;
+    float: left;
     ul{
         width: 100%;
         list-style: none;
         li{
             float: left;
-            margin: 7px;
+            margin: 2px;
             width: 250px;
             height: 150px;
             border-radius: 10px;
@@ -155,7 +234,7 @@ onMounted(()=>{
                 border-radius: 10px;
             }
             &:hover{
-                box-shadow: 0px 0px 10px 5px yellowgreen;
+                box-shadow: 0px 0px 10px 5px #00c588;
             }
         }
     }
