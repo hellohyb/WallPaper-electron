@@ -12,6 +12,7 @@
 SystemParametersInfoA(SPI_SETDESKWALLPAPER,0,(PVOID)path,SPIF_UPDATEINIFILE);
 ```
 2、动态壁纸：核心内容（ffi-napy模块，ffplay播放）。通过ffi-napi调用“use32",然后发送消息生成新窗口，然后创建并调用子进程（子进程运行ffplay），通过ffplay全屏循环播放视频，然后把播放视频窗口分配给之前生成的新窗口。
+#### 动态壁纸原理参考：https://github.com/januwA/windows10-dynamic-wallpaper
 
 壁纸api接口：
 
