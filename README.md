@@ -1,5 +1,5 @@
 # 桌面壁纸更换
-
+# 当前为旧版本，2.0重构版本已完成（支持macos以及windows）： https://github.com/hellohyb/Wallpaper-electron2.0
 ## 总体效果
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/27284959/1669122212198-b3bd8dbe-c3bf-4516-9d87-927fc785ac76.png#averageHue=%232f6343&clientId=ue10592ff-7bb3-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=743&id=u4fabbb27&margin=%5Bobject%20Object%5D&name=image.png&originHeight=929&originWidth=1457&originalType=binary&ratio=1&rotation=0&showTitle=false&size=2347665&status=done&style=none&taskId=ub489a17f-c6fd-41f4-9552-7af0b097461&title=&width=1165.6)
 ### 概述：
